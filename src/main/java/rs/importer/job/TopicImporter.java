@@ -16,9 +16,12 @@ public class TopicImporter {
     @Autowired
     private LocalManager<Topic> localManager;
 
-    @Scheduled(initialDelay = 1000, fixedRate = 10000)
+    int pageNo;
+
+    @Scheduled(initialDelay = 1000, fixedRate = 1000)
     public void importTopics() {
         log.debug("importing topics");
-        localManager.save(topicManager.get(0, 50));
+        localManager.save(topicManager.get(pageNo, 1000));
+        pageNo++;
     }
 }
