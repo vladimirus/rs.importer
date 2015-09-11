@@ -1,8 +1,11 @@
 package rs.importer.dao;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
@@ -11,8 +14,10 @@ import rs.importer.model.Model;
 import java.util.Collection;
 import java.util.List;
 
-public abstract class ModelDao<T extends Model> {
-    final static String INDEX_NAME = "rs2";
+public abstract class AbstractModelDao<T extends Model> {
+    private Logger log = Logger.getLogger(AbstractModelDao.class);
+    @Value("${rs.index.name}")
+    String indexName;
 
     @Autowired
     ElasticsearchTemplate template;
@@ -23,6 +28,7 @@ public abstract class ModelDao<T extends Model> {
                 .collect(toList());
 
         if (!queries.isEmpty()) {
+            log.debug(format("Saving %d %s into %s", collection.size(), type, index));
             template.bulkIndex(queries);
         }
     }
