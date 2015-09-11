@@ -15,9 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RsDaoTest {
+public class RemoteTopicDaoTest {
     @InjectMocks
-    private RsDao rsDao;
+    private RemoteTopicDao remoteTopicDao;
     @Mock
     private RestTemplate restTemplate;
 
@@ -29,7 +29,7 @@ public class RsDaoTest {
         given(restTemplate.getForEntity(anyString(), any())).willReturn(entity);
 
         // when
-        rsDao.get(0, 50);
+        remoteTopicDao.get(0, 50);
 
         // then
         verify(restTemplate).getForEntity(anyString(), any());

@@ -8,25 +8,25 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.web.client.RestTemplate;
-import rs.importer.dao.RsDao;
+import rs.importer.dao.RemoteTopicDao;
 import rs.importer.model.Topic;
 
 import java.util.Collection;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RsDaoIT {
-    private RsDao rsDao;
+    private RemoteTopicDao remoteTopicDao;
 
     @Before
     public void before() {
-        rsDao = new RsDao(new RestTemplate());
+        remoteTopicDao = new RemoteTopicDao(new RestTemplate());
     }
 
     @Test
     public void shouldConnect() {
 
         // when
-        Collection<Topic> actual = rsDao.get(0, 50);
+        Collection<Topic> actual = remoteTopicDao.get(0, 50);
 
         // then
         assertThat(actual, hasSize(50));

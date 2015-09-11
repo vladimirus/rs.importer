@@ -15,7 +15,7 @@ public class RsImporterConfig {
     }
 
     @Bean
-    private ClientHttpRequestFactory clientHttpRequestFactory() {
+    public ClientHttpRequestFactory clientHttpRequestFactory() {
         HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
         factory.setReadTimeout(180000);     // 3 minutes
         factory.setConnectTimeout(180000);

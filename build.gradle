@@ -38,6 +38,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-jetty")
     compile("org.springframework.boot:spring-boot-starter-jersey")
+    compile("org.apache.httpcomponents:httpclient:4.5")
     compile("org.projectlombok:lombok:1.16.4")
     testCompile("org.springframework.boot:spring-boot-starter-test") 
 }
