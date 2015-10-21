@@ -1,6 +1,8 @@
 package rs.importer.job;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyCollectionOf;
 import static org.mockito.Matchers.anyInt;
@@ -16,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import rs.importer.model.Topic;
 import rs.importer.service.LocalManager;
 import rs.importer.service.RemoteManager;
+import rs.importer.service.Validator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TopicImporterTest {
@@ -25,12 +28,16 @@ public class TopicImporterTest {
     private RemoteManager<Topic> remoteManager;
     @Mock
     private LocalManager<Topic> localManager;
+    @Mock
+    private Validator<Topic> validator;
 
     @Test
     public  void shouldImport() {
         // given
         given(remoteManager.get(0, 1000)).willReturn(asList(aTopic("1"), aTopic("2")));
-        topicImporter.pagesToCheck = 2;
+        given(remoteManager.get(1, 1000)).willReturn(emptyList());
+        given(validator.filter(anyCollectionOf(Topic.class))).willReturn(singletonList(aTopic("1")));
+        topicImporter.maxEmptyCount = 0;
 
         // when
         topicImporter.importTopics();

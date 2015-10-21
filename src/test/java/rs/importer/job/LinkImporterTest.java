@@ -1,6 +1,7 @@
 package rs.importer.job;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyCollectionOf;
@@ -15,9 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import rs.importer.model.Link;
-import rs.importer.service.LinkValidator;
 import rs.importer.service.LocalManager;
 import rs.importer.service.RemoteManager;
+import rs.importer.service.Validator;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LinkImporterTest {
@@ -28,21 +29,23 @@ public class LinkImporterTest {
     @Mock
     private LocalManager<Link> localManager;
     @Mock
-    private LinkValidator linkValidator;
+    private Validator<Link> validator;
 
     @Test
     public  void shouldImport() {
         // given
         given(remoteManager.get(0, 1000)).willReturn(asList(aLink("1"), aLink("2")));
-        given(linkValidator.filter(anyCollectionOf(Link.class))).willReturn(singletonList(aLink("2")));
-        linkImporter.pagesToCheck = 2;
+        given(remoteManager.get(1, 1000)).willReturn(emptyList());
+        given(remoteManager.get(2, 1000)).willReturn(emptyList());
+        given(validator.filter(anyCollectionOf(Link.class))).willReturn(singletonList(aLink("2")));
+        linkImporter.maxEmptyCount = 1;
 
         // when
         linkImporter.importLinks();
 
         // then
-        verify(remoteManager, times(2)).get(anyInt(), anyInt());
-        verify(linkValidator).filter(anyCollectionOf(Link.class));
+        verify(remoteManager, times(3)).get(anyInt(), anyInt());
+        verify(validator).filter(anyCollectionOf(Link.class));
         verify(localManager).save(anyCollectionOf(Link.class));
     }
 }

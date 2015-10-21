@@ -8,7 +8,7 @@ import rs.importer.model.Link;
 import java.util.Collection;
 
 @Service
-public class LinkValidator {
+public class LinkValidator implements Validator<Link>{
 
     public Collection<Link> filter(Collection<Link> links) {
         return links.stream()
